@@ -1,4 +1,8 @@
+package ui.login;
+
 import javax.swing.*;
+import ui.signup.signup;
+import ui.home.homepage;
 
 public class loginPageForm extends JFrame {
 
@@ -10,22 +14,41 @@ public class loginPageForm extends JFrame {
 
     public loginPageForm(){
 
-        add(panel1);
-        setSize(600,600);
-        setTitle("RideWave Login");
+        initializeTheForm();
 
-        signUpLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                System.out.println("Sign Up Clicked");
-            }
-        });
 
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                System.out.println("Login Clicked");
+                loginButtonActionPerformed();
             }
         });
 
+        signUpLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                signUpLabelMouseClicked();
+            }
+        });
+
+
+    }
+
+    private void loginButtonActionPerformed() {
+        homepage homePage = new homepage();
+        homePage.setVisible(true);
+        loginPageForm.this.dispose();
+    }
+
+
+    private void initializeTheForm() {
+        add(panel1);
+        setSize(600,600);
+        setTitle("RideWave Login");
+        setLocationRelativeTo(null);
+    }
+    private void signUpLabelMouseClicked() {
+        signup signupPage = new signup();
+        signupPage.setVisible(true);
+        loginPageForm.this.dispose();
 
     }
 

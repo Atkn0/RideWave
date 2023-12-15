@@ -1,8 +1,9 @@
-import javax.swing.*;
+import ui.home.homepage;
+import ui.login.loginPageForm;
 
 public class Main {
     public static void main(String[] args) {
-        loginPageFrom form = new loginPageFrom();
-        form.setVisible(true);
+        loginPageForm loginPage = new loginPageForm();
+        loginPage.setVisible(true);
     }
 }
