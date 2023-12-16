@@ -1,42 +1,67 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class homeScreen extends JFrame {
-    private JPanel anaPanel3;
-    private JPanel digerPanel;
+    private CardLayout cardLayout;
+    private JPanel kartPanel;
+
     public homeScreen() {
-        // JFrame özelliklerini ayarlamak
         setTitle("Ana Sayfa");
-        setSize(800, 600); // Genişlik ve yükseklik
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Pencereyi ekranın ortasına yerleştirme
-        //setLayout(new BorderLayout()); // Layout yöneticisini belirleme (isteğe bağlı)
-        String[] busses = {"Öğe 1", "Öğe 2", "Öğe 3", "Öğe 4", "Öğe 5"};
-        JList<String> myList = new JList<>(busses);
-        myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JScrollPane scrollPane = new JScrollPane(myList);
-        add(scrollPane, BorderLayout.CENTER);
-        // Seçili öğeleri dinlemek için bir ActionListener ekleyin
-        myList.addListSelectionListener(e -> {
-            // Seçilen öğeleri işleyin (burada bir konsol çıktısı veriyoruz)
-            System.out.println("Seçilen otobüs: " + myList.getSelectedValue());
+        cardLayout = new CardLayout();
+        kartPanel = new JPanel(cardLayout);
+
+        // Sayfa 1
+        JPanel favori = new JPanel();
+        favori.add(new JLabel("Favori Otobüsler"));
+
+        // Sayfa 2
+        JPanel allbusses = new JPanel();
+        allbusses.add(new JLabel("Bütün Otobüsler"));
+
+        // Sayfa 3
+        JPanel profile = new JPanel();
+        profile.add(new JLabel("Profil"));
+
+        kartPanel.add(favori, "Favori otobüsler");
+        kartPanel.add(allbusses, "Bütün Otobüsler");
+        kartPanel.add(profile, "Profil");
+
+        DefaultListModel<String> sayfaListModel = new DefaultListModel<>();
+        sayfaListModel.addElement("Favori Otobüsler");
+        sayfaListModel.addElement("Bütün Otobüsler");
+        sayfaListModel.addElement("Profil");
+
+        JList<String> sayfaListesi = new JList<>(sayfaListModel);
+        sayfaListesi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sayfaListesi.addListSelectionListener(e -> {
+            String secilenSayfa = sayfaListesi.getSelectedValue();
+            if (secilenSayfa != null) {
+                cardLayout.show(kartPanel, secilenSayfa);
+            }
         });
 
-        // Düğme ekleyin
-        JButton myButton = new JButton("Seç");
-        myButton.addActionListener(e -> {
-            // Düğmeye tıklandığında yapılacak işlemler
-            System.out.println("Düğmeye tıklandı!");
-        });
-        add(myButton, BorderLayout.SOUTH);
+        JScrollPane listScrollPane = new JScrollPane(sayfaListesi);
 
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(listScrollPane, BorderLayout.WEST);
+        panel.add(kartPanel, BorderLayout.CENTER);
 
+        add(panel);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
-
-        homeScreen anaSayfa = new homeScreen();
-        anaSayfa.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new homeScreen();
+            }
+        });
     }
 }
