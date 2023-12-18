@@ -1,6 +1,7 @@
 package org.example.ui.login;
 
 import org.example.database.sqLiteConnector;
+import org.example.ui.home.homePage;
 import org.example.ui.signup.signupPage;
 
 import javax.swing.*;
@@ -18,23 +19,24 @@ public class loginPageForm extends JFrame{
 
     public loginPageForm(){
         initializeTheForm();
+        buttonClickedListener();
+
+    }
+
+
+    private void buttonClickedListener(){
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed();
             }
         });
-
         signupLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 signUpLabelMouseClicked();
             }
         });
-
     }
-
-
     private void signUpLabelMouseClicked() {
-
         signupPage signupPage = new signupPage();
         signupPage.setVisible(true);
         loginPageForm.this.dispose();
@@ -44,27 +46,18 @@ public class loginPageForm extends JFrame{
         Connection connection = sqLiteConnector.connect();
         return connection;
     }
-    private void queryDataFromSQL(Connection connection){
-
-
-    }
 
     private void loginButtonActionPerformed() {
-
-
         String email = emailTextField.getText();
         String password = passwordTextField.getText();
-
-        auth(email,password);
-
-
-        /*
-        homepage homePage = new homepage();
-        homePage.setVisible(true);
-        loginPageForm.this.dispose();
-
-         */
-        
+        boolean isLoginSuccess = auth(email,password);
+        if (isLoginSuccess){
+            homePage homePage = new homePage();
+            homePage.setVisible(true);
+            loginPageForm.this.dispose();
+        }else {
+            System.out.println("Giriş Yapılamadı!");
+        }
     }
 
     private void initializeTheForm() {
@@ -74,17 +67,9 @@ public class loginPageForm extends JFrame{
         setLocationRelativeTo(null);
     }
 
-    private void auth(String email, String password){
-
+    private boolean auth(String email, String password){
         boolean isLoginSuccess = sqLiteConnector.authentication(email,password);
-        if (isLoginSuccess){
-            System.out.print("giriş başarılı");
-        }else{
-            System.out.print("giriş başarısız");
-        }
-
-
-
+        return isLoginSuccess;
     }
 
 }

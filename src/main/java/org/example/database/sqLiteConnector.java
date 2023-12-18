@@ -69,7 +69,20 @@ public class sqLiteConnector {
             e.printStackTrace();
             return false;
         }
+    }
 
+    public static boolean createUserSqlite(String email,String password){
+        String query = "INSERT INTO Users (email, password) VALUES (?, ?)";
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            int count = preparedStatement.executeUpdate();
+            return count > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Kullanıcı oluşturulurken bir hata oluştu: " + e.getMessage(), e);
+        }
 
     }
+
 }
