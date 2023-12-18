@@ -1,14 +1,13 @@
 package org.example;
 
 
-import org.example.ui.login.loginPageForm;
-import org.example.ui.signup.signupPage;
-
-import javax.swing.*;
+import org.example.ui.homePage.homePageFrom;
 
 public class Main {
     public static void main(String[] args) {
-        loginPageForm loginPageForm = new loginPageForm();
-        loginPageForm.setVisible(true);
+        homePageFrom homePageForm = new homePageFrom();
+        homePageForm.setVisible(true);
+
+
     }
 }
