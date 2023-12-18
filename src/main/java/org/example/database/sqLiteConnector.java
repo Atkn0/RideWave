@@ -42,7 +42,6 @@ public class sqLiteConnector {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        int id = resultSet.getInt("name");
                         String name = resultSet.getString("name");
                         String email = resultSet.getString("email");
                         System.out.println( "Name: " + name + "email : "+ email);
@@ -53,7 +52,6 @@ public class sqLiteConnector {
             e.printStackTrace();
         }
     }
-
     public static boolean authentication(String email, String password){
         try (Connection connection = connect()) {
             String query = "SELECT * FROM Users WHERE email = ? AND password = ?";
@@ -70,7 +68,6 @@ public class sqLiteConnector {
             return false;
         }
     }
-
     public static boolean createUserSqlite(String email,String password){
         String query = "INSERT INTO Users (email, password) VALUES (?, ?)";
         try (Connection connection = connect();

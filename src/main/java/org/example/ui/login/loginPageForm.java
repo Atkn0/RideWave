@@ -1,7 +1,7 @@
 package org.example.ui.login;
 
 import org.example.database.sqLiteConnector;
-import org.example.ui.home.homePage;
+import org.example.ui.homePage.homePageFrom;
 import org.example.ui.signup.signupPage;
 
 import javax.swing.*;
@@ -20,7 +20,6 @@ public class loginPageForm extends JFrame{
     public loginPageForm(){
         initializeTheForm();
         buttonClickedListener();
-
     }
 
 
@@ -41,35 +40,30 @@ public class loginPageForm extends JFrame{
         signupPage.setVisible(true);
         loginPageForm.this.dispose();
     }
-
     private Connection sqlConnection(){
         Connection connection = sqLiteConnector.connect();
         return connection;
     }
-
     private void loginButtonActionPerformed() {
         String email = emailTextField.getText();
         String password = passwordTextField.getText();
         boolean isLoginSuccess = auth(email,password);
         if (isLoginSuccess){
-            homePage homePage = new homePage();
-            homePage.setVisible(true);
+            homePageFrom homepage = new homePageFrom();
+            homepage.setVisible(true);
             loginPageForm.this.dispose();
         }else {
             System.out.println("Giriş Yapılamadı!");
         }
     }
-
     private void initializeTheForm() {
         add(loginPanel);
         setSize(600,600);
         setTitle("RideWave Login");
         setLocationRelativeTo(null);
     }
-
     private boolean auth(String email, String password){
-        boolean isLoginSuccess = sqLiteConnector.authentication(email,password);
-        return isLoginSuccess;
+        return sqLiteConnector.authentication(email,password);
     }
 
 }
