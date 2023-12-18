@@ -1,8 +1,10 @@
 package org.example.ui.login;
 
+import org.example.database.sqLiteConnector;
 import org.example.ui.signup.signupPage;
 
 import javax.swing.*;
+import java.sql.Connection;
 
 public class loginPageForm extends JFrame{
 
@@ -30,6 +32,7 @@ public class loginPageForm extends JFrame{
 
     }
 
+
     private void signUpLabelMouseClicked() {
 
         signupPage signupPage = new signupPage();
@@ -37,7 +40,24 @@ public class loginPageForm extends JFrame{
         loginPageForm.this.dispose();
     }
 
+    private Connection sqlConnection(){
+        Connection connection = sqLiteConnector.connect();
+        return connection;
+    }
+    private void queryDataFromSQL(Connection connection){
+
+
+    }
+
     private void loginButtonActionPerformed() {
+
+
+        String email = emailTextField.getText();
+        String password = passwordTextField.getText();
+
+        auth(email,password);
+
+
         /*
         homepage homePage = new homepage();
         homePage.setVisible(true);
@@ -52,6 +72,19 @@ public class loginPageForm extends JFrame{
         setSize(600,600);
         setTitle("RideWave Login");
         setLocationRelativeTo(null);
+    }
+
+    private void auth(String email, String password){
+
+        boolean isLoginSuccess = sqLiteConnector.authentication(email,password);
+        if (isLoginSuccess){
+            System.out.print("giriş başarılı");
+        }else{
+            System.out.print("giriş başarısız");
+        }
+
+
+
     }
 
 }
