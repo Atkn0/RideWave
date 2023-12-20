@@ -106,6 +106,7 @@ public class favoriteBuses extends JFrame {
                 // Initialize the routes array with the size of the result set
                 routes = new String[rowCount];
 
+
                 // Re-execute the result set to retrieve the values
 
                 int index = 0;
@@ -126,6 +127,7 @@ public class favoriteBuses extends JFrame {
             e.printStackTrace();
             // Handle exceptions appropriately
         }
+
 
         return routes;
     }
