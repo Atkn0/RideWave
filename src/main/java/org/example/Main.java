@@ -12,7 +12,7 @@ import java.sql.Connection;
 
 public class Main {
     public static void main(String[] args) {
-       loginPageForm lg = new loginPageForm();
-       lg.setVisible(true);
+       homePageFrom homePageFrom = new homePageFrom();
+       homePageFrom.setVisible(true);
     }
 }

@@ -5,7 +5,7 @@ import java.sql.*;
 public class sqLiteConnector {
 
     private static Connection connection;
-    private static final String DATABASE_URL = "jdbc:sqlite:C:\\Users\\aatak\\Desktop\\sqlite\\ridewave.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:C:\\Users\\imtekmuhendislik\\Downloads\\sqlite-tools-win-x64-3440200\\deneme.db";
 
     static {
         try {

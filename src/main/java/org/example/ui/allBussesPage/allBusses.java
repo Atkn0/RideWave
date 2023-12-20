@@ -48,11 +48,12 @@ public class allBusses extends JFrame {
             }
         });
     }
-    private void selectedBusNavigation(String busCode){
-        selectedbuspage selectedbuspage = new selectedbuspage(busCode);
-        selectedbuspage.setVisible(true);
+    private void selectedBusNavigation(String selectedBus) {
+        selectedbuspage selectedBusPage = new selectedbuspage(selectedBus, selectedRoute);
+        selectedBusPage.setVisible(true);
         allBusses.this.dispose();
     }
+
 
 
 
