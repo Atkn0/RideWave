@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.Models;
 
 public class BusModel {
     private int id;
