@@ -1,6 +1,6 @@
 package org.example.ui.homePage;
 
-import org.example.models.userModel;
+import org.example.Models.userModel;
 import org.example.ui.allBussesPage.allBusses;
 import org.example.ui.favoritebussesPage.favoriteBuses;
 import org.example.ui.profile.profile;

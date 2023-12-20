@@ -1,7 +1,7 @@
 package org.example.ui.allBussesPage;
 
 import org.example.database.sqLiteConnector;
-import org.example.models.BusModel;
+import org.example.Models.BusModel;
 import org.example.ui.selectedbuspage.selectedbuspage;
 
 import javax.swing.*;
