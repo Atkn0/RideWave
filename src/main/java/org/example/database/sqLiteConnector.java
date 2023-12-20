@@ -1,11 +1,16 @@
 package org.example.database;
 
+import org.example.models.BusModel;
+
+import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class sqLiteConnector {
 
     private static Connection connection;
-    private static final String DATABASE_URL = "jdbc:sqlite:C:\\Users\\imtekmuhendislik\\Downloads\\sqlite-tools-win-x64-3440200\\deneme.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:C:\\Users\\aatak\\Desktop\\sqlite\\ridewave.db";
 
     static {
         try {
@@ -35,6 +40,7 @@ public class sqLiteConnector {
             System.err.println("SQLite bağlantısı kapatılırken hata oluştu: " + e.getMessage());
         }
     }
+
 
     public static void getAllUsers (Connection connection) {
         try {
@@ -82,4 +88,50 @@ public class sqLiteConnector {
 
     }
 
+
+    public static List<String> getAllBusNames() {
+        List<String> busNames = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
+            String query = "SELECT busName FROM AllBuses";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    busNames.add(resultSet.getString("busName"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return busNames;
+    }
+
+    public static BusModel retrieveBusDataFromDatabase(String busName) {
+        BusModel busModel = null;
+
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AllBuses WHERE busName LIKE ?")) {
+
+            preparedStatement.setString(1, "%" + busName + "%");
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                // Process the result set and get the first bus data
+                if (resultSet.next()) {
+                    busModel = new BusModel();
+                    busModel.setBusName(resultSet.getString("busName"));
+                    busModel.setFirstStation(resultSet.getString("firstStation"));
+                    busModel.setLastStation(resultSet.getString("lastStation"));
+                    busModel.setCurrentStation(resultSet.getString("currentStation"));
+                    busModel.setBusCrowd(resultSet.getInt("busCrowd"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+
+        return busModel;
+    }
 }

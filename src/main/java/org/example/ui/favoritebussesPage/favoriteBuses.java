@@ -1,5 +1,6 @@
 package org.example.ui.favoritebussesPage;
 
+import org.example.database.sqLiteConnector;
 import org.example.ui.selectedbuspage.selectedbuspage;
 
 import javax.swing.*;
@@ -35,8 +36,7 @@ public class favoriteBuses extends JFrame {
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
 
-        // Fetch bus data from the database and populate the list
-        retrieveBusDataFromDatabase();
+
     }
 
     private void listSelectionListener(JList<String> busList) {
@@ -87,10 +87,10 @@ public class favoriteBuses extends JFrame {
         String[] routes = null;
 
         // SQLite database connection
-        String jdbcURL = "jdbc:sqlite:C:\\Users\\imtekmuhendislik\\Downloads\\sqlite-tools-win-x64-3440200\\deneme.db";
+        String jdbcURL = "jdbc:sqlite:C:\\Users\\aatak\\Desktop\\sqlite\\ridewave.db";
 
         try (Connection connection = DriverManager.getConnection(jdbcURL);
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT location, destination FROM buses WHERE bus_name = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT firstStation, lastStation FROM AllBuses WHERE busName = ?")) {
 
             // Set the parameter for the prepared statement
             preparedStatement.setString(1, selectedBus);
@@ -111,11 +111,11 @@ public class favoriteBuses extends JFrame {
                 int index = 0;
                 while (resultSet.next()) {
                     // Modify the column names "location" and "destination" with your actual column names
-                    String location = resultSet.getString("location");
-                    String destination = resultSet.getString("destination");
+                    String firstStation = resultSet.getString("firstStation");
+                    String lastStation = resultSet.getString("lastStation");
 
                     // Concatenate location and destination to form the route name
-                    String routeName = location + " - " + destination;
+                    String routeName = firstStation + " - " + lastStation;
 
                     // Store the route names in the array
                     routes[index++] = routeName;
@@ -166,23 +166,4 @@ public class favoriteBuses extends JFrame {
         return null;
     }
 
-    private void retrieveBusDataFromDatabase() {
-        // SQLite database connection
-        String jdbcURL = "jdbc:sqlite:C:\\Users\\imtekmuhendislik\\Downloads\\sqlite-tools-win-x64-3440200\\deneme.db";
-
-        try (Connection connection = DriverManager.getConnection(jdbcURL);
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT bus_name FROM buses")) {
-
-            // Process the result set and add bus names to the list model
-            while (resultSet.next()) {
-                String busName = resultSet.getString("bus_name");
-                busListModel.addElement(busName);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle exceptions appropriately
-        }
-    }
 }

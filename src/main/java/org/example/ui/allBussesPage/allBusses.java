@@ -1,6 +1,7 @@
 package org.example.ui.allBussesPage;
 
-import org.example.ui.favoritebussesPage.favoriteBuses;
+import org.example.database.sqLiteConnector;
+import org.example.models.BusModel;
 import org.example.ui.selectedbuspage.selectedbuspage;
 
 import javax.swing.*;
@@ -9,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class allBusses extends JFrame {
 
@@ -27,8 +29,14 @@ public class allBusses extends JFrame {
     }
     private void initializeBusList(){
 
-        String[] busItems = {"Bus 1", "Bus 2", "Bus 3", "Bus 4", "Bus 5"};
-        JList<String> busList = new JList<>(busItems);
+        DefaultListModel busListModel = new DefaultListModel();
+        List<String> allBusesNames = sqLiteConnector.getAllBusNames();
+
+        for (String busName : allBusesNames) {
+            busListModel.addElement(busName);
+        }
+
+        JList<String> busList = new JList<>(busListModel);
         listSelectionListener(busList);
         JScrollPane scrollPane = new JScrollPane(busList);
 
@@ -42,8 +50,9 @@ public class allBusses extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     String selectedBus = busList.getSelectedValue();
+                    BusModel busModel = getSelectedBusRoute(selectedBus);
                     //selectedBusNavigation(selectedBus);
-                    selectRouteDiaglog();
+                    selectRouteDiaglog(busModel);
                 }
             }
         });
@@ -53,17 +62,22 @@ public class allBusses extends JFrame {
         selectedBusPage.setVisible(true);
         allBusses.this.dispose();
     }
-
-
-
-
-    private void selectRouteDiaglog(){
+    private void selectRouteDiaglog(BusModel selectedBusModel){
         JFrame frame = new JFrame("Select a route");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new FlowLayout());
 
-        JRadioButton rota1Button = new JRadioButton("Anadolu - Estu");
-        JRadioButton rota2Button = new JRadioButton("Estu - Anadolu");
+        initalizeRadioButtons(frame,selectedBusModel);
+
+    }
+    private void initalizeRadioButtons(JFrame frame,BusModel selectedBusModel){
+
+
+        String firstStation = selectedBusModel.getFirstStation();
+        String lastStation = selectedBusModel.getLastStation();
+
+        JRadioButton rota1Button = new JRadioButton(firstStation + "-" + lastStation);
+        JRadioButton rota2Button = new JRadioButton(lastStation + "-" + firstStation);
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(rota1Button);
@@ -78,8 +92,11 @@ public class allBusses extends JFrame {
         frame.setSize(300, 150);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
 
+    }
+    private BusModel getSelectedBusRoute(String selectedBus){
+        return sqLiteConnector.retrieveBusDataFromDatabase(selectedBus);
+    }
     private JButton getButton(JRadioButton rota1Button, JRadioButton rota2Button, JFrame frame) {
         JButton devamEtButton = new JButton("Next");
         devamEtButton.addActionListener(new ActionListener() {
