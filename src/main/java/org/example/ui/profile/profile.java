@@ -1,6 +1,6 @@
 package org.example.ui.profile;
 
-import org.example.Models.userModel;
+import org.example.models.userModel;
 import org.example.database.sqLiteConnector;
 
 import javax.swing.*;

@@ -1,9 +1,7 @@
 package org.example.database;
 
+import org.example.models.userModel;
 import org.example.models.BusModel;
-
-import javax.swing.*;
-import org.example.Models.userModel;
 
 import java.sql.*;
 import java.util.ArrayList;
