@@ -1,8 +1,10 @@
 package org.example.ui.homePage;
 
+import org.example.Models.userModel;
 import org.example.ui.allBussesPage.allBusses;
 import org.example.ui.favoritebussesPage.favoriteBuses;
 import org.example.ui.profile.profile;
+import org.example.database.sqLiteConnector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,9 +77,17 @@ public class homePageFrom extends JFrame {
         homePageFrom.this.dispose();
     }
     private void setProfileButton(){
-        profile profile = new profile();
+        userModel userModel= getUserModel();
+        profile profile = new profile(userModel);
         profile.setVisible(true);
         homePageFrom.this.dispose();
     }
+    private userModel getUserModel(){
 
-}
+
+        return  sqLiteConnector.currentProfileModel();
+    }
+
+    }
+
+

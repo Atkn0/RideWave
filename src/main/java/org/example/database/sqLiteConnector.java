@@ -1,5 +1,7 @@
 package org.example.database;
 
+import org.example.Models.userModel;
+
 import java.sql.*;
 
 public class sqLiteConnector {
@@ -36,15 +38,45 @@ public class sqLiteConnector {
         }
     }
 
+    public static String getUserByName(String email) {
+        String password;
+        String email2;
+        try {
+            String sql = "SELECT * FROM Users WHERE email = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, email);
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        email2 = resultSet.getString("email");
+                        password = resultSet.getString("password");
+
+                        System.out.println("Email: " + email + ", Paasword: " + password);
+                    }
+
+
+                }
+
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "abc";
+
+
+
+    }
     public static void getAllUsers (Connection connection) {
         try {
             String sql = "SELECT * FROM Users";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        String name = resultSet.getString("name");
                         String email = resultSet.getString("email");
-                        System.out.println( "Name: " + name + "email : "+ email);
+                        String password = resultSet.getString("password");
+                        System.out.println( "Email: " + email + "Password : "+ password);
                     }
                 }
             }
@@ -80,6 +112,40 @@ public class sqLiteConnector {
             throw new RuntimeException("Kullanıcı oluşturulurken bir hata oluştu: " + e.getMessage(), e);
         }
 
+    }
+    public static userModel currentProfileModel(){
+        String email = "berke";
+        userModel currentUser = null;
+
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ?")) {
+
+            // Set the parameter for the prepared statement
+            preparedStatement.setString(1, email);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    System.out.println("try içerisinde");
+                    // Verileri çek
+                    String email2 = resultSet.getString("email");
+
+                    String password = resultSet.getString("password");
+
+                    // UserModel oluştur
+                     currentUser = new userModel(email, password);
+
+                    System.out.println("current user = " + currentUser);
+
+                } else {
+                    System.out.println("Kullanıcı bulunamadı.");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Hata durumunda uygun bir şekilde işleyin
+        }
+
+        return currentUser;
     }
 
 }
