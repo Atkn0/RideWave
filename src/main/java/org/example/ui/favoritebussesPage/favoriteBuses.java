@@ -107,7 +107,7 @@ public class favoriteBuses extends JFrame {
                 routes = new String[rowCount];
 
                 // Re-execute the result set to retrieve the values
-                resultSet.beforeFirst();
+
                 int index = 0;
                 while (resultSet.next()) {
                     // Modify the column names "location" and "destination" with your actual column names
@@ -167,3 +167,5 @@ public class favoriteBuses extends JFrame {
     }
 
 }
+
+
