@@ -1,7 +1,7 @@
 package org.example.ui.signup;
 
 import org.example.database.sqLiteConnector;
-import org.example.ui.home.homePage;
+import org.example.ui.homePage.homePageFrom;
 import org.example.ui.login.loginPageForm;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class signupPage extends JFrame{
         String password = passwordTextField.getText();
         boolean isSuccess = createUser(email,password);
         if (isSuccess){
-            homePage homePage = new homePage();
+            homePageFrom homePage = new homePageFrom();
             homePage.setVisible(true);
             signupPage.this.dispose();
         }else{
