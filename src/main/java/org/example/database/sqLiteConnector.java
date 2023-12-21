@@ -5,6 +5,7 @@ import org.example.Models.BusModel;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class sqLiteConnector {
@@ -29,7 +30,6 @@ public class sqLiteConnector {
         }
         return connection;
     }
-
     public static void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -40,8 +40,7 @@ public class sqLiteConnector {
             System.err.println("SQLite bağlantısı kapatılırken hata oluştu: " + e.getMessage());
         }
     }
-
-
+    //check the return
     public static String getUserByName(String email) {
         String password;
         String email2;
@@ -54,16 +53,10 @@ public class sqLiteConnector {
                     while (resultSet.next()) {
                         email2 = resultSet.getString("email");
                         password = resultSet.getString("password");
-
                         System.out.println("Email: " + email + ", Paasword: " + password);
                     }
-
-
                 }
-
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -124,35 +117,24 @@ public class sqLiteConnector {
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ?")) {
 
-            // Set the parameter for the prepared statement
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     System.out.println("try içerisinde");
-                    // Verileri çek
                     String email2 = resultSet.getString("email");
-
                     String password = resultSet.getString("password");
 
-                    // UserModel oluştur
                      currentUser = new userModel(email, password);
-
                     System.out.println("current user = " + currentUser);
-
                 } else {
                     System.out.println("Kullanıcı bulunamadı.");
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            // Hata durumunda uygun bir şekilde işleyin
         }
-
         return currentUser;
     }
-
-
     public static List<String> getAllBusNames() {
         List<String> busNames = new ArrayList<>();
 
@@ -160,7 +142,6 @@ public class sqLiteConnector {
             String query = "SELECT busName FROM AllBuses";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
-
                 while (resultSet.next()) {
                     busNames.add(resultSet.getString("busName"));
                 }
@@ -168,16 +149,13 @@ public class sqLiteConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return busNames;
     }
-
     public static BusModel retrieveBusDataFromDatabase(String busName) {
         BusModel busModel = null;
 
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AllBuses WHERE busName LIKE ?")) {
-
             preparedStatement.setString(1, "%" + busName + "%");
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -195,7 +173,32 @@ public class sqLiteConnector {
             e.printStackTrace();
             // Handle exceptions appropriately
         }
-
         return busModel;
     }
+    public static ArrayList<String> getStationsByBusname(String busCode){
+
+        ArrayList<String> stationsList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
+            String query = "SELECT busName, stations FROM Stations WHERE busName = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, busCode);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String busName = resultSet.getString("busName");
+                        String stationsString = resultSet.getString("stations");
+
+                        String[] stations = stationsString.split(", ");
+                        stationsList.addAll(Arrays.asList(stations));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stationsList;
+    }
+
+
 }

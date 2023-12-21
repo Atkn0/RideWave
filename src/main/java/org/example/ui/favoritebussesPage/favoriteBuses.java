@@ -1,7 +1,6 @@
 package org.example.ui.favoritebussesPage;
 
-import org.example.database.sqLiteConnector;
-import org.example.ui.selectedbuspage.selectedbuspage;
+import org.example.ui.selectedbuspage.selectedBuspage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,6 @@ public class favoriteBuses extends JFrame {
         setSize(400, 300);
         setLocationRelativeTo(null);
     }
-
     private void initializeBusList() {
         busListModel = new DefaultListModel<>();
         JList<String> busList = new JList<>(busListModel);
@@ -38,7 +36,6 @@ public class favoriteBuses extends JFrame {
 
 
     }
-
     private void listSelectionListener(JList<String> busList) {
         busList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -50,13 +47,11 @@ public class favoriteBuses extends JFrame {
             }
         });
     }
-
     private void selectedBusNavigation(String selectedBus, String selectedRoute) {
-        selectedbuspage selectedBusPage = new selectedbuspage(selectedBus, selectedRoute);
+        selectedBuspage selectedBusPage = new selectedBuspage(selectedBus);
         selectedBusPage.setVisible(true);
         favoriteBuses.this.dispose();
     }
-
     private void selectRouteDialog(String selectedBus) {
         JFrame frame = new JFrame("Select a route");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,7 +77,7 @@ public class favoriteBuses extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    //gidici
     private String[] retrieveRoutesFromDatabase(String selectedBus) {
         String[] routes = null;
 
@@ -131,7 +126,6 @@ public class favoriteBuses extends JFrame {
 
         return routes;
     }
-
     private JButton getButton(JFrame frame, String selectedBus) {
         JButton devamEtButton = new JButton("Next");
         devamEtButton.addActionListener(new ActionListener() {
@@ -154,7 +148,6 @@ public class favoriteBuses extends JFrame {
         });
         return devamEtButton;
     }
-
     private JRadioButton getSelectedRadioButton(JFrame frame) {
         // Iterate through components in the frame to find the selected radio button
         for (Component component : frame.getContentPane().getComponents()) {

@@ -2,7 +2,7 @@ package org.example.ui.allBussesPage;
 
 import org.example.database.sqLiteConnector;
 import org.example.Models.BusModel;
-import org.example.ui.selectedbuspage.selectedbuspage;
+import org.example.ui.selectedbuspage.selectedBuspage;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -58,7 +58,7 @@ public class allBusses extends JFrame {
         });
     }
     private void selectedBusNavigation(String selectedBus) {
-        selectedbuspage selectedBusPage = new selectedbuspage(selectedBus, selectedRoute);
+        selectedBuspage selectedBusPage = new selectedBuspage(selectedBus);
         selectedBusPage.setVisible(true);
         allBusses.this.dispose();
     }
@@ -84,6 +84,14 @@ public class allBusses extends JFrame {
         buttonGroup.add(rota2Button);
 
         JButton devamEtButton = getButton(rota1Button, rota2Button, frame);
+
+        devamEtButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedBusModelBusName = selectedBusModel.getBusName();
+               selectedBusNavigation(selectedBusModelBusName);
+            }
+        });
 
         frame.add(rota1Button);
         frame.add(rota2Button);
