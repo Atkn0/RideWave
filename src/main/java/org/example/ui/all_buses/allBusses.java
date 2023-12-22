@@ -1,8 +1,8 @@
-package org.example.ui.allBussesPage;
+package org.example.ui.all_buses;
 
 import org.example.database.sqLiteConnector;
 import org.example.Models.BusModel;
-import org.example.ui.selectedbuspage.selectedBuspage;
+import org.example.ui.selected_bus.selectedBuspage;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -14,7 +14,9 @@ import java.util.List;
 
 public class allBusses extends JFrame {
 
+/*
 
+ */
     private String selectedRoute;
 
     public allBusses(){
@@ -22,7 +24,7 @@ public class allBusses extends JFrame {
         initializeBusList();
     }
     private void initializeUI() {
-        setTitle("Favorite Buses");
+        setTitle("All Buses");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 600);
         setLocationRelativeTo(null);

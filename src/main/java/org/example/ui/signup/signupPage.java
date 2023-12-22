@@ -1,7 +1,7 @@
 package org.example.ui.signup;
 
 import org.example.database.sqLiteConnector;
-import org.example.ui.homePage.homePageFrom;
+import org.example.ui.home.homePageFrom;
 import org.example.ui.login.loginPageForm;
 
 import javax.swing.*;
@@ -40,9 +40,10 @@ public class signupPage extends JFrame{
     private void signUpButtonClicked(){
         String email = emailTextField.getText();
         String password = passwordTextField.getText();
-        boolean isSuccess = createUser(email,password);
-        if (isSuccess){
-            homePageFrom homePage = new homePageFrom();
+        boolean isUserCreateSuccess = createUser(email,password);
+        boolean isUserFavoriteSuccess = addUserToFavoritesBuses(email);
+        if (isUserCreateSuccess & isUserFavoriteSuccess){
+            homePageFrom homePage = new homePageFrom(email);
             homePage.setVisible(true);
             signupPage.this.dispose();
         }else{
@@ -63,7 +64,9 @@ public class signupPage extends JFrame{
     }
 
     private boolean createUser(String email,String password){
-      boolean isCreated = sqLiteConnector.createUserSqlite(email,password);
-      return isCreated;
+        return sqLiteConnector.createUserSqlite(email,password);
+    }
+    private boolean addUserToFavoritesBuses(String userEmail){
+        return sqLiteConnector.addUserToFavoriteBuses(userEmail);
     }
 }

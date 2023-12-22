@@ -1,8 +1,8 @@
-package org.example.ui.homePage;
+package org.example.ui.home;
 
 import org.example.Models.userModel;
-import org.example.ui.allBussesPage.allBusses;
-import org.example.ui.favoritebussesPage.favoriteBuses;
+import org.example.ui.all_buses.allBusses;
+import org.example.ui.favorite_buses.favoriteBuses;
 import org.example.ui.profile.profile;
 import org.example.database.sqLiteConnector;
 
@@ -18,10 +18,10 @@ public class homePageFrom extends JFrame {
     JButton profileButton;
 
 
-    public homePageFrom() {
+    public homePageFrom(String userEmail) {
         initializeThePanel();
         initializeButtons();
-        buttonClickedListener();
+        buttonClickedListener(userEmail);
 
         add(homepagePanel);
     }
@@ -55,15 +55,15 @@ public class homePageFrom extends JFrame {
 
 
     }
-    private void buttonClickedListener(){
+    private void buttonClickedListener(String userEmail){
         allBusesButton.addActionListener(e -> {
             setAllBusesButtonClicked();
         });
         favoriteBusesButton.addActionListener(e -> {
-           setFavoriteBusesButton();
+           setFavoriteBusesButton(userEmail);
         });
         profileButton.addActionListener(e -> {
-            setProfileButton();
+            setProfileButton(userEmail);
         });
     }
     private void setAllBusesButtonClicked(){
@@ -71,21 +71,21 @@ public class homePageFrom extends JFrame {
         allBusses.setVisible(true);
         homePageFrom.this.dispose();
     }
-    private void setFavoriteBusesButton(){
+    private void setFavoriteBusesButton(String userEmail){
+        //Burada loginPage'den gelen email verisi alınmalı
+        userModel currentUserModel= getUserModel(userEmail);
         favoriteBuses favoritebuses = new favoriteBuses();
         favoritebuses.setVisible(true);
         homePageFrom.this.dispose();
     }
-    private void setProfileButton(){
-        userModel userModel= getUserModel();
+    private void setProfileButton(String userEmail){
+        userModel userModel= getUserModel(userEmail);
         profile profile = new profile(userModel);
         profile.setVisible(true);
         homePageFrom.this.dispose();
     }
-    private userModel getUserModel(){
-
-
-        return  sqLiteConnector.currentProfileModel();
+    private userModel getUserModel(String userEmail){
+        return  sqLiteConnector.currentProfileModel(userEmail);
     }
 
     }

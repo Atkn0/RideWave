@@ -1,6 +1,6 @@
-package org.example.ui.favoritebussesPage;
+package org.example.ui.favorite_buses;
 
-import org.example.ui.selectedbuspage.selectedBuspage;
+import org.example.ui.selected_bus.selectedBuspage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +19,11 @@ public class favoriteBuses extends JFrame {
         initializeBusList();
     }
 
+
     private void initializeUI() {
         setTitle("Favorite Buses");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(600, 600);
         setLocationRelativeTo(null);
     }
     private void initializeBusList() {

@@ -1,7 +1,7 @@
 package org.example.ui.login;
 
 import org.example.database.sqLiteConnector;
-import org.example.ui.homePage.homePageFrom;
+import org.example.ui.home.homePageFrom;
 import org.example.ui.signup.signupPage;
 
 import javax.swing.*;
@@ -49,7 +49,8 @@ public class loginPageForm extends JFrame{
         String password = passwordTextField.getText();
         boolean isLoginSuccess = auth(email,password);
         if (isLoginSuccess){
-            homePageFrom homepage = new homePageFrom();
+            //Burada kullanıcı modeli HomePage'e aktarılmalı *1
+            homePageFrom homepage = new homePageFrom(email);
             homepage.setVisible(true);
             loginPageForm.this.dispose();
         }else {

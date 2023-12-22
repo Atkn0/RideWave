@@ -1,4 +1,4 @@
-package org.example.ui.selectedbuspage;
+package org.example.ui.selected_bus;
 
 import org.example.database.sqLiteConnector;
 
@@ -11,12 +11,15 @@ public class selectedBuspage extends JFrame {
     private Box duraklarBox;
     private JTextPane stationListTextArea;
     JPanel stationsPanelContainer;
+    JButton addFavoriteButton;
+
     private String selectedRoute;
 
     public selectedBuspage(String selectedBusName) {
         initializeUI();
         initializeComponents();
         populateStationList(selectedBusName);
+        buttonClickedListener(selectedBusName);
     }
     private void initializeUI() {
         setTitle("Selected Bus");
@@ -31,12 +34,25 @@ public class selectedBuspage extends JFrame {
         add(busCodeLabel);
         add(routeLabel);
     }
+
+    private void buttonClickedListener(String selectedBusName){
+        addFavoriteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                System.out.println("selectedBusCode = " + selectedBusName);
+                sqLiteConnector.addFavoriteBus("t",selectedBusName);
+                System.out.println("favorites button clicked");
+            }
+        });
+    }
     private void initializeComponents() {
         stationsPanelContainer = new JPanel(new GridLayout(1, 0)); // 1 satır, 0 sütunlu GridLayout kullanarak yatayda sırala
         JScrollPane scrollPane = new JScrollPane(stationsPanelContainer);
 
+        addFavoriteButton = new JButton("Add to Favorite Button");
+
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(scrollPane, BorderLayout.CENTER);
+        getContentPane().add(addFavoriteButton);
 
     }
     private void populateStationList(String selectedBusName) {
