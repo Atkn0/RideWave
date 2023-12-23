@@ -85,8 +85,8 @@ public class homePageFrom extends JFrame {
         homePageFrom.this.dispose();
     }
     private userModel getUserModel(String userEmail){
-        return  sqLiteConnector.currentProfileModel(userEmail);
+        return sqLiteConnector.currentProfileModel(userEmail);
     }
 
-    }
+}
 

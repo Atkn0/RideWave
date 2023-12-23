@@ -49,7 +49,7 @@ public class favoriteBuses extends JFrame {
         });
     }
     private void selectedBusNavigation(String selectedBus, String selectedRoute) {
-        selectedBuspage selectedBusPage = new selectedBuspage(selectedBus);
+        selectedBuspage selectedBusPage = new selectedBuspage(selectedBus,"12");
         selectedBusPage.setVisible(true);
         favoriteBuses.this.dispose();
     }

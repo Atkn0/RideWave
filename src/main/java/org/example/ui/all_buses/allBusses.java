@@ -60,7 +60,7 @@ public class allBusses extends JFrame {
         });
     }
     private void selectedBusNavigation(String selectedBus) {
-        selectedBuspage selectedBusPage = new selectedBuspage(selectedBus);
+        selectedBuspage selectedBusPage = new selectedBuspage(selectedBus,"12");
         selectedBusPage.setVisible(true);
         allBusses.this.dispose();
     }
