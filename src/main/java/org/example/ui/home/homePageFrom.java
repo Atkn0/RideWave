@@ -57,7 +57,7 @@ public class homePageFrom extends JFrame {
     }
     private void buttonClickedListener(String userEmail){
         allBusesButton.addActionListener(e -> {
-            setAllBusesButtonClicked();
+            setAllBusesButtonClicked(userEmail);
         });
         favoriteBusesButton.addActionListener(e -> {
            setFavoriteBusesButton(userEmail);
@@ -66,15 +66,15 @@ public class homePageFrom extends JFrame {
             setProfileButton(userEmail);
         });
     }
-    private void setAllBusesButtonClicked(){
-        allBusses  allBusses = new allBusses();
+    private void setAllBusesButtonClicked(String userEmail){
+        allBusses  allBusses = new allBusses(userEmail);
         allBusses.setVisible(true);
         homePageFrom.this.dispose();
     }
     private void setFavoriteBusesButton(String userEmail){
         //Burada loginPage'den gelen email verisi alınmalı
         userModel currentUserModel= getUserModel(userEmail);
-        favoriteBuses favoritebuses = new favoriteBuses();
+        favoriteBuses favoritebuses = new favoriteBuses(userEmail);
         favoritebuses.setVisible(true);
         homePageFrom.this.dispose();
     }

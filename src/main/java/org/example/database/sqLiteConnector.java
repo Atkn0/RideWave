@@ -99,12 +99,13 @@ public class sqLiteConnector {
             return false;
         }
     }
-    public static boolean createUserSqlite(String email,String password){
-        String query = "INSERT INTO Users (email, password) VALUES (?, ?)";
+    public static boolean createUserSqlite(String email,String password,String cardNumber){
+        String query = "INSERT INTO Users (email, password, cardNumber) VALUES (?, ?, ?)";
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
+            preparedStatement.setString(3, cardNumber);
             int count = preparedStatement.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
@@ -126,8 +127,10 @@ public class sqLiteConnector {
                     System.out.println("try içerisinde");
                     String email2 = resultSet.getString("email");
                     String password = resultSet.getString("password");
+                    String cardNumber = resultSet.getString("cardNumber");
+                    String balance = resultSet.getString("balance");
 
-                     currentUser = new userModel(userEmail, password);
+                     currentUser = new userModel(userEmail, password,cardNumber,balance);
                     System.out.println("current user = " + currentUser);
                 } else {
                     System.out.println("Kullanıcı bulunamadı.");
@@ -219,9 +222,7 @@ public class sqLiteConnector {
         }
     }
     public static void addFavoriteBus(String email, String newFavoriteBus) {
-        try {
-            // Veritabanı bağlantısını oluştur
-            Connection connection = DriverManager.getConnection(DATABASE_URL);
+        try (Connection connection = connect()) {
             String selectQuery = "SELECT favoriteBuses FROM FavoriteBuses WHERE userEmail = ?";
 
             try (PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
@@ -237,7 +238,7 @@ public class sqLiteConnector {
                             currentBusesList.add(newFavoriteBus);
 
                             String updatedFavoriteBuses = String.join(", ", currentBusesList);
-                            System.out.println("UPDATED FAVOTİRE LİST = " + updatedFavoriteBuses);
+                            System.out.println("UPDATED FAVORITE LIST = " + updatedFavoriteBuses);
 
                             String updateQuery = "UPDATE FavoriteBuses SET favoriteBuses = ? WHERE userEmail = ?";
 
@@ -261,11 +262,76 @@ public class sqLiteConnector {
             e.printStackTrace();
         }
     }
+    public static void removeFavoriteBus(String email, String favoriteBusToRemove) {
+        try (Connection connection = connect()) {
+            String selectQuery = "SELECT favoriteBuses FROM FavoriteBuses WHERE userEmail = ?";
+
+            try (PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
+                selectStatement.setString(1, email);
+
+                try (ResultSet resultSet = selectStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String currentFavoriteBuses = resultSet.getString("favoriteBuses");
+
+                        List<String> currentBusesList = new ArrayList<>(splitFavoriteBuses(currentFavoriteBuses));
+
+                        if (currentBusesList.contains(favoriteBusToRemove)) {
+                            currentBusesList.remove(favoriteBusToRemove);
+
+                            String updatedFavoriteBuses = String.join(", ", currentBusesList);
+                            System.out.println("UPDATED FAVORITE LIST = " + updatedFavoriteBuses);
+
+                            String updateQuery = "UPDATE FavoriteBuses SET favoriteBuses = ? WHERE userEmail = ?";
+
+                            try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                                updateStatement.setString(1, updatedFavoriteBuses);
+                                updateStatement.setString(2, email);
+
+                                updateStatement.executeUpdate();
+
+                                System.out.println("Favorite Bus removed successfully.");
+                            }
+                        } else {
+                            System.out.println("Error: The specified bus does not exist in favorites.");
+                        }
+                    } else {
+                        System.out.println("User not found.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     private static ArrayList<String> splitFavoriteBuses(String favoriteBuses) {
         if (favoriteBuses != null && !favoriteBuses.isEmpty()) {
             return new ArrayList<>(Arrays.asList(favoriteBuses.split(",\\s*")));
         }
         return new ArrayList<>();
+    }
+
+    public static List<String> getFavoriteBusesByEmail(String userEmail){
+        List<String> favoriteBusesList = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
+            String query = "SELECT favoriteBuses FROM FavoriteBuses WHERE userEmail = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, userEmail);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        // favoriteBuses sütununu al ve virgül ile bölecek şekilde listeye ekle
+                        String favoriteBusesString = resultSet.getString("favoriteBuses");
+                        String[] favoriteBusesArray = favoriteBusesString.split(", ");
+                        favoriteBusesList.addAll(Arrays.asList(favoriteBusesArray));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return favoriteBusesList;
+
     }
 }
 

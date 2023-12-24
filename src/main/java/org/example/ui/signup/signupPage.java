@@ -15,6 +15,8 @@ public class signupPage extends JFrame{
     private JLabel password;
     private JLabel loginLabel;
     private JPanel signupPanel;
+    private JLabel cardNumber;
+    private JTextField cardNumberTextField;
 
     public signupPage(){
         initializeTheForm();
@@ -40,14 +42,23 @@ public class signupPage extends JFrame{
     private void signUpButtonClicked(){
         String email = emailTextField.getText();
         String password = passwordTextField.getText();
-        boolean isUserCreateSuccess = createUser(email,password);
-        boolean isUserFavoriteSuccess = addUserToFavoritesBuses(email);
-        if (isUserCreateSuccess & isUserFavoriteSuccess){
-            homePageFrom homePage = new homePageFrom(email);
-            homePage.setVisible(true);
-            signupPage.this.dispose();
-        }else{
-            System.out.println("Kullanıcı oluşturulamadı!");
+        String cardNumber = cardNumberTextField.getText();
+
+        // Şifre kontrolü
+        if (isPasswordValid(password)) {
+            // Diğer işlemleri devam ettir
+            boolean isUserCreateSuccess = createUser(email, password, cardNumber);
+            boolean isUserFavoriteSuccess = addUserToFavoritesBuses(email);
+
+            if (isUserCreateSuccess & isUserFavoriteSuccess) {
+                homePageFrom homePage = new homePageFrom(email);
+                homePage.setVisible(true);
+                signupPage.this.dispose();
+            } else {
+                System.out.println("Kullanıcı oluşturulamadı!");
+            }
+        } else {
+            System.out.println("Geçersiz şifre!");
         }
     }
 
@@ -63,10 +74,45 @@ public class signupPage extends JFrame{
         signupPage.this.dispose();
     }
 
-    private boolean createUser(String email,String password){
-        return sqLiteConnector.createUserSqlite(email,password);
+    private boolean createUser(String email,String password,String cardNumber){
+        return sqLiteConnector.createUserSqlite(email,password,cardNumber);
     }
     private boolean addUserToFavoritesBuses(String userEmail){
         return sqLiteConnector.addUserToFavoriteBuses(userEmail);
+    }
+
+    private boolean isPasswordValid(String password) {
+        // Password length check
+        if (password.length() < 8 || password.length() > 64) {
+            JOptionPane.showMessageDialog(null, "Password must be between 8 and 64 characters.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Uppercase letter check
+        if (!password.matches(".*[A-Z].*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain an uppercase letter.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Lowercase letter check
+        if (!password.matches(".*[a-z].*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain a lowercase letter.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Digit check
+        if (!password.matches(".*\\d.*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain a digit.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Symbol check
+        if (!password.matches(".*[!@#$%^&*()-_=+\\[\\]{}|;:'\",.<>/?].*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain a symbol.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // If all checks pass, consider the password valid
+        return true;
     }
 }
