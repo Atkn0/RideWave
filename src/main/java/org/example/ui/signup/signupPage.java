@@ -1,10 +1,11 @@
 package org.example.ui.signup;
 
 import org.example.database.sqLiteConnector;
-import org.example.ui.homePage.homePageFrom;
+import org.example.ui.home.homePage;
 import org.example.ui.login.loginPageForm;
 
 import javax.swing.*;
+import java.util.List;
 
 public class signupPage extends JFrame{
     private JTextField emailTextField;
@@ -15,6 +16,8 @@ public class signupPage extends JFrame{
     private JLabel password;
     private JLabel loginLabel;
     private JPanel signupPanel;
+    private JLabel cardNumber;
+    private JTextField cardNumberTextField;
 
     public signupPage(){
         initializeTheForm();
@@ -40,16 +43,25 @@ public class signupPage extends JFrame{
     private void signUpButtonClicked(){
         String email = emailTextField.getText();
         String password = passwordTextField.getText();
-        boolean isSuccess = createUser(email,password);
-        if (isSuccess){
-            homePageFrom homePage = new homePageFrom();
-            homePage.setVisible(true);
-            signupPage.this.dispose();
-        }else{
-            System.out.println("Kullanıcı oluşturulamadı!");
+        String cardNumber = cardNumberTextField.getText();
+
+        // Şifre kontrolü
+        if (isPasswordValid(password)) {
+            // Diğer işlemleri devam ettir
+            boolean isUserCreateSuccess = createUser(email, password, cardNumber);
+            boolean isUserFavoriteSuccess = addUserToFavoritesBuses(email);
+
+            if (isUserCreateSuccess & isUserFavoriteSuccess) {
+                homePage homePage = new homePage(email);
+                homePage.setVisible(true);
+                signupPage.this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(signupPage.this, "Kullanıcı oluşturulamadı!", "Hata", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            System.out.println("Geçersiz şifre!");
         }
     }
-
     private void initializeTheForm() {add(signupPanel);
         setTitle("Sign Up");
         setSize(600, 600);
@@ -61,9 +73,58 @@ public class signupPage extends JFrame{
         loginPage.setVisible(true);
         signupPage.this.dispose();
     }
+    private boolean createUser(String email,String password,String cardNumber){
 
-    private boolean createUser(String email,String password){
-      boolean isCreated = sqLiteConnector.createUserSqlite(email,password);
-      return isCreated;
+
+        if (controlUserEmailValid(email)){
+            System.out.println("This mail is invalid");
+            return false;
+        }else{
+            System.out.println("This mail is valid");
+            return sqLiteConnector.createUserSqlite(email,password,cardNumber);
+        }
+
+    }
+    private boolean controlUserEmailValid(String email){
+        List<String> allUsersNames = sqLiteConnector.getAllUsers();
+        boolean control = allUsersNames.contains(email);
+        return control;
+    }
+    private boolean addUserToFavoritesBuses(String userEmail){
+        return sqLiteConnector.addUserToFavoriteBuses(userEmail);
+    }
+    private boolean isPasswordValid(String password) {
+        // Password length check
+        if (password.length() < 8 || password.length() > 64) {
+            JOptionPane.showMessageDialog(null, "Password must be between 8 and 64 characters.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Uppercase letter check
+        if (!password.matches(".*[A-Z].*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain an uppercase letter.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Lowercase letter check
+        if (!password.matches(".*[a-z].*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain a lowercase letter.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Digit check
+        if (!password.matches(".*\\d.*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain a digit.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Symbol check
+        if (!password.matches(".*[!@#$%^&*()-_=+\\[\\]{}|;:'\",.<>/?].*")) {
+            JOptionPane.showMessageDialog(null, "Password must contain a symbol.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // If all checks pass, consider the password valid
+        return true;
     }
 }
