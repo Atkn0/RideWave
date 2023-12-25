@@ -6,9 +6,7 @@ import org.example.Models.BusModel;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 public class sqLiteConnector {
@@ -67,21 +65,23 @@ public class sqLiteConnector {
 
 
     }
-    public static void getAllUsers (Connection connection) {
+    public static List<String> getAllUsers () {
+
+        List<String> allUsersNames = new ArrayList<>();
         try {
             String sql = "SELECT * FROM Users";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (PreparedStatement statement = connect().prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         String email = resultSet.getString("email");
-                        String password = resultSet.getString("password");
-                        System.out.println( "Email: " + email + "Password : "+ password);
+                        allUsersNames.add(email);
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return allUsersNames;
     }
     public static boolean authentication(String email, String password){
         try (Connection connection = connect()) {
@@ -100,12 +100,13 @@ public class sqLiteConnector {
         }
     }
     public static boolean createUserSqlite(String email,String password,String cardNumber){
-        String query = "INSERT INTO Users (email, password, cardNumber) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Users (email, password, cardNumber, balance) VALUES (?, ?, ?, ?)";
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
             preparedStatement.setString(3, cardNumber);
+            preparedStatement.setString(4, String.valueOf((int) (Math.random() * 100) + 1));
             int count = preparedStatement.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
@@ -211,7 +212,7 @@ public class sqLiteConnector {
             String query = "INSERT INTO FavoriteBuses (userEmail, favoriteBuses) VALUES (?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, userEmail);
-                preparedStatement.setString(2, null);
+                preparedStatement.setString(2, "");
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 return rowsAffected > 0;
@@ -309,7 +310,6 @@ public class sqLiteConnector {
         }
         return new ArrayList<>();
     }
-
     public static List<String> getFavoriteBusesByEmail(String userEmail){
         List<String> favoriteBusesList = new ArrayList<>();
 

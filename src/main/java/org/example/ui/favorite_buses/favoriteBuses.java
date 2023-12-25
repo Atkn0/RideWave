@@ -2,7 +2,7 @@ package org.example.ui.favorite_buses;
 
 import org.example.database.sqLiteConnector;
 import org.example.Models.BusModel;
-import org.example.ui.home.homePageFrom;
+import org.example.ui.home.homePage;
 import org.example.ui.selected_bus.selectedBuspage;
 
 import javax.imageio.ImageIO;
@@ -161,7 +161,7 @@ public class favoriteBuses extends JFrame {
         });
     }
     private void backButtonNavigation(String userEmail){
-        homePageFrom homePage = new homePageFrom(userEmail);
+        homePage homePage = new homePage(userEmail);
         homePage.setVisible(true);
         favoriteBuses.this.dispose();
     }

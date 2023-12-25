@@ -9,7 +9,7 @@ import org.example.database.sqLiteConnector;
 import javax.swing.*;
 import java.awt.*;
 
-public class homePageFrom extends JFrame {
+public class homePage extends JFrame {
 
     private JPanel homepagePanel;
     GridBagConstraints gbc = new GridBagConstraints();
@@ -18,7 +18,7 @@ public class homePageFrom extends JFrame {
     JButton profileButton;
 
 
-    public homePageFrom(String userEmail) {
+    public homePage(String userEmail) {
         initializeThePanel();
         initializeButtons();
         buttonClickedListener(userEmail);
@@ -69,20 +69,20 @@ public class homePageFrom extends JFrame {
     private void setAllBusesButtonClicked(String userEmail){
         allBusses  allBusses = new allBusses(userEmail);
         allBusses.setVisible(true);
-        homePageFrom.this.dispose();
+        homePage.this.dispose();
     }
     private void setFavoriteBusesButton(String userEmail){
         //Burada loginPage'den gelen email verisi alınmalı
         userModel currentUserModel= getUserModel(userEmail);
         favoriteBuses favoritebuses = new favoriteBuses(userEmail);
         favoritebuses.setVisible(true);
-        homePageFrom.this.dispose();
+        homePage.this.dispose();
     }
     private void setProfileButton(String userEmail){
         userModel userModel= getUserModel(userEmail);
         profile profile = new profile(userModel);
         profile.setVisible(true);
-        homePageFrom.this.dispose();
+        homePage.this.dispose();
     }
     private userModel getUserModel(String userEmail){
         return sqLiteConnector.currentProfileModel(userEmail);

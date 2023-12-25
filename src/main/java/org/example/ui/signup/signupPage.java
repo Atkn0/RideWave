@@ -1,10 +1,11 @@
 package org.example.ui.signup;
 
 import org.example.database.sqLiteConnector;
-import org.example.ui.home.homePageFrom;
+import org.example.ui.home.homePage;
 import org.example.ui.login.loginPageForm;
 
 import javax.swing.*;
+import java.util.List;
 
 public class signupPage extends JFrame{
     private JTextField emailTextField;
@@ -51,17 +52,16 @@ public class signupPage extends JFrame{
             boolean isUserFavoriteSuccess = addUserToFavoritesBuses(email);
 
             if (isUserCreateSuccess & isUserFavoriteSuccess) {
-                homePageFrom homePage = new homePageFrom(email);
+                homePage homePage = new homePage(email);
                 homePage.setVisible(true);
                 signupPage.this.dispose();
             } else {
-                System.out.println("Kullanıcı oluşturulamadı!");
+                JOptionPane.showMessageDialog(signupPage.this, "Kullanıcı oluşturulamadı!", "Hata", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             System.out.println("Geçersiz şifre!");
         }
     }
-
     private void initializeTheForm() {add(signupPanel);
         setTitle("Sign Up");
         setSize(600, 600);
@@ -73,14 +73,26 @@ public class signupPage extends JFrame{
         loginPage.setVisible(true);
         signupPage.this.dispose();
     }
-
     private boolean createUser(String email,String password,String cardNumber){
-        return sqLiteConnector.createUserSqlite(email,password,cardNumber);
+
+
+        if (controlUserEmailValid(email)){
+            System.out.println("This mail is invalid");
+            return false;
+        }else{
+            System.out.println("This mail is valid");
+            return sqLiteConnector.createUserSqlite(email,password,cardNumber);
+        }
+
+    }
+    private boolean controlUserEmailValid(String email){
+        List<String> allUsersNames = sqLiteConnector.getAllUsers();
+        boolean control = allUsersNames.contains(email);
+        return control;
     }
     private boolean addUserToFavoritesBuses(String userEmail){
         return sqLiteConnector.addUserToFavoriteBuses(userEmail);
     }
-
     private boolean isPasswordValid(String password) {
         // Password length check
         if (password.length() < 8 || password.length() > 64) {

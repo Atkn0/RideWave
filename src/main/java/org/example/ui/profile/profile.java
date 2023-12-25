@@ -1,13 +1,11 @@
 package org.example.ui.profile;
 
 import org.example.Models.userModel;
-import org.example.database.sqLiteConnector;
-import org.example.ui.home.homePageFrom;
+import org.example.ui.home.homePage;
 import org.example.ui.login.loginPageForm;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
 
 
 public class profile extends JFrame {
@@ -91,7 +89,7 @@ public class profile extends JFrame {
     }
     private void buttonClickedListener(String userEmail){
         backButton.addActionListener(e->{
-            homePageFrom homePage = new homePageFrom(userEmail);
+            homePage homePage = new homePage(userEmail);
             homePage.setVisible(true);
             profile.this.dispose();
         });

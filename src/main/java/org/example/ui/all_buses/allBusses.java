@@ -2,7 +2,7 @@ package org.example.ui.all_buses;
 
 import org.example.database.sqLiteConnector;
 import org.example.Models.BusModel;
-import org.example.ui.home.homePageFrom;
+import org.example.ui.home.homePage;
 import org.example.ui.selected_bus.selectedBuspage;
 
 import javax.imageio.ImageIO;
@@ -164,14 +164,13 @@ public class allBusses extends JFrame {
     }
 
     private void backButtonNavigation(String userEmail){
-        homePageFrom homePage = new homePageFrom(userEmail);
+        homePage homePage = new homePage(userEmail);
         homePage.setVisible(true);
         allBusses.this.dispose();
     }
 
     private void initalizeRadioButtons(JFrame frame,BusModel selectedBusModel,String userEmail){
 
-        System.out.println("Current Selected Route: " + selectedRoute);
 
         String firstStation = selectedBusModel.getFirstStation();
         String lastStation = selectedBusModel.getLastStation();
@@ -185,7 +184,6 @@ public class allBusses extends JFrame {
 
         devamEtButton = getButton(firstRouteButton, secondRouteButton, frame,selectedBusModel,userEmail);
 
-        System.out.println("Current Selected Route: " + selectedRoute);
 
 
         frame.add(firstRouteButton);
